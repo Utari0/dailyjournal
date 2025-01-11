@@ -15,7 +15,7 @@ if (!isset($_SESSION['username'])) {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>LOTR Journal | Admin</title>
-    <link rel="icon" href="img/logo.png" />
+    <link rel="icon" href="img/logo.jpg" />
     <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
@@ -60,12 +60,15 @@ if (!isset($_SESSION['username'])) {
             <li class="nav-item">
                 <a class="nav-link" href="admin.php?page=gallery">Gallery</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="admin.php?page=index"><strong>Homepage</strong></a>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-danger fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <?= $_SESSION['username']?>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="profile.php">Profile Utari</a></li>
+                    <li><a class="dropdown-item" href="admin.php?page=profile">Profile gita</a></li>
                     <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                 </ul>
             </li>
@@ -74,6 +77,7 @@ if (!isset($_SESSION['username'])) {
     </div>
     </nav>
     <!-- nav end -->
+
     <!-- content begin -->
 <section id="content" class="p-5">
     <div class="container">
@@ -93,6 +97,7 @@ if (!isset($_SESSION['username'])) {
     </div>
 </section>
 <!-- content end -->
+
     <!-- footer begin -->
     <footer class="text-center p-5 bg-danger-subtle">
       <div>

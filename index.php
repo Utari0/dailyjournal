@@ -104,10 +104,10 @@ include "koneksi.php";
     <h1 class="fw-bold display-4 pb-3">article</h1>
     <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
       <?php
-      $sql = "SELECT * FROM article ORDER BY tanggal DESC";
-      $hasil = $conn->query($sql); 
+      $sql1 = "SELECT * FROM article ORDER BY tanggal DESC";
+      $hasil1 = $conn->query($sql1); 
 
-      while($row = $hasil->fetch_assoc()){
+      while($row = $hasil1->fetch_assoc()){
       ?>
         <div class="col">
           <div class="card h-100">
@@ -137,48 +137,44 @@ include "koneksi.php";
 <section id="gallery" class="text-center p-5 bg-danger-subtle">
   <div class="container">
     <h1 class="fw-bold display-4 pb-3">gallery</h1>
-      <div id="carouselExample" class="carousel slide">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="img/foto1.jpg" class="d-block w-100" alt="..." />
-          </div>
-          <div class="carousel-item">
-            <img src="img/foto2.jpg" class="d-block w-100" alt="..." />
-          </div>
-          <div class="carousel-item">
-            <img src="img/foto3.jpg" class="d-block w-100" alt="..." />
-          </div>
-          <div class="carousel-item">
-            <img src="img/foto4.jpg" class="d-block w-100" alt="..." />
-          </div>
-          <div class="carousel-item">
-            <img src="img/foto5.jpg" class="d-block w-100" alt="..." />
-          </div>
-          <div class="carousel-item">
-            <img src="img/foto6.jpg" class="d-block w-100" alt="..." />
-          </div>
-       </div>
-       
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExample"
-            data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
+    <div id="carouselExample" class="carousel slide">
+      <div class="carousel-inner">
+        <?php
+        $sql2 = "SELECT * FROM gallery ORDER BY tanggal DESC";
+        $hasil2 = $conn->query($sql2);
+        $isActive = true; // Flag untuk menentukan item aktif
 
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExample"
-            data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
+        while($row = $hasil2->fetch_assoc()){
+        ?>
+        <div class="carousel-item <?= $isActive ? 'active' : '' ?>">
+          <img src="img/<?= $row["gambar"] ?>" class="d-block w-100" alt="..." />
         </div>
+        <?php
+          $isActive = false; // Set flag ke false setelah item pertama
+        }
+        ?>
       </div>
-    </section>
+
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselExample"
+        data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselExample"
+        data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</section>
     <!-- gallery end -->
 
     <!-- schedule begin -->

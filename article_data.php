@@ -14,15 +14,15 @@
                     include "koneksi.php";
 
                     $hlm = (isset($_POST['hlm'])) ? $_POST['hlm'] : 1;
-                    $limit = 6;
+                    $limit = 3;
                     $limit_start = ($hlm - 1) * $limit;
                     $no = $limit_start + 1;
 
-                    $sql = "SELECT * FROM article ORDER BY tanggal DESC LIMIT $limit_start, $limit";
-                    $hasil = $conn->query($sql);
+                    $sql1 = "SELECT * FROM article ORDER BY tanggal DESC LIMIT $limit_start, $limit";
+                    $hasil1 = $conn->query($sql1);
 
                     $no = 1;
-                    while ($row = $hasil->fetch_assoc()) {
+                    while ($row = $hasil1->fetch_assoc()) {
                     ?>
                         <tr>
                             <td><?= $no++ ?></td>
@@ -58,7 +58,7 @@
             <form method="post" action="" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="formGroupExampleInput" class="form-label">Jadul</label>
+                        <label for="formGroupExampleInput" class="form-label">Judul</label>
                         <input type="hidden" name="id" value="<?= $row["id"] ?>">
                         <input type="text" class="form-control" name="judul" placeholder="Tuliskan Judul Artikel" value="<?= $row["judul"] ?>" required>
                     </div>
