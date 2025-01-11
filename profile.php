@@ -1,44 +1,77 @@
-<div class="modal fade" id="modalEdit<?= $row["id"] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Article</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form method="post" action="" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="formGroupExampleInput" class="form-label">Judul</label>
-                        <input type="hidden" name="id" value="<?= $row["id"] ?>">
-                        <input type="text" class="form-control" name="judul" placeholder="Tuliskan Judul Artikel" value="<?= $row["judul"] ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="floatingTextarea2">Isi</label>
-                        <textarea class="form-control" placeholder="Tuliskan Isi Artikel" name="isi" required><?= $row["isi"] ?></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="formGroupExampleInput2" class="form-label">Ganti Gambar</label>
-                        <input type="file" class="form-control" name="gambar">
-                    </div>
-                    <div class="mb-3">
-                        <label for="formGroupExampleInput3" class="form-label">Gambar Lama</label>
-                        <?php
-                        if ($row["gambar"] != '') {
-                            if (file_exists('img/' . $row["gambar"] . '')) {
-                        ?>
-                                <br><img src="img/<?= $row["gambar"] ?>" width="100">
-                        <?php
-                            }
-                        }
-                        ?>
-                        <input type="hidden" name="gambar_lama" value="<?= $row["gambar"] ?>">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <input type="submit" value="simpan" name="simpan" class="btn btn-primary">
-                </div>
-            </form>
+<?php
+// session_start();
+include "koneksi.php";
+
+// Ambil data pengguna dari database
+$username = $_SESSION['username'];
+$stmt = $conn->prepare("SELECT foto FROM user WHERE username = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $password = $_POST['password'];
+    $foto = $_FILES['foto'];
+    $foto_lama = $_POST['foto_lama'];
+    $update = false;
+
+    // Update password jika diisi
+    if (!empty($password)) {
+        $hashed_password = md5($password);
+        $stmt = $conn->prepare("UPDATE user SET password = ? WHERE username = ?");
+        $stmt->bind_param("ss", $hashed_password, $username);
+        $stmt->execute();
+        $update = true;
+    }
+
+    // Update foto jika ada file yang diupload
+    if ($foto['name'] != '') {
+        include "upload_foto.php"; // Pastikan untuk menyertakan file upload_foto.php
+        $upload_result = upload_foto($foto, 'replace', $foto_lama);
+        
+        if ($upload_result['status']) {
+            $new_foto = $upload_result['message'];
+            $stmt = $conn->prepare("UPDATE user SET foto = ? WHERE username = ?");
+            $stmt->bind_param("ss", $new_foto, $username);
+            $stmt->execute();
+            $update = true;
+        } else {
+            echo "<script>alert('" . $upload_result['message'] . "');</script>";
+        }
+    }
+
+    if ($update) {
+        echo "<script>alert('Profile berhasil diperbarui');</script>";
+    }
+}
+?>
+
+<form method="post" action="" enctype="multipart/form-data">
+    <div class="modal-body">
+        <div class="mb-3">
+            <label for="formGroupExampleInput1" class="form-label">Ganti Password</label>
+            <input type="text" class="form-control" name="password" placeholder="Isi password jika ingin di ganti">
+        </div>
+        <div class="mb-3">
+            <label for="formGroupExampleInput2" class="form-label">Ganti Profile</label>
+            <input type="file" class="form-control" name="foto">
+        </div>
+        <div class="mb-3">
+            <label for="formGroupExampleInput3" class="form-label">Profile Lama</label>
+            <?php
+            if ($row["foto"] != '') {
+                if (file_exists('img/' . $row["foto"] . '')) {
+                    ?>
+                    <br><img src="img/<?= $row["foto"] ?>" width="100">
+                    <?php
+                }
+            }
+            ?>
+            <input type="hidden" name="foto_lama" value="<?= $row["foto"] ?>">
         </div>
     </div>
-</div>
+    <div class="modal-footer">
+        <input type="submit" value="simpan" name="simpan" class="btn btn-primary">
+    </div>
+</form>
